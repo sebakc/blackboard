@@ -1,7 +1,7 @@
 const WebSocket = require('ws');
 const http = require('http');
 
-const SERVER_URL = 'http://localhost:3000';
+const SERVER_URL = 'http://localhost:3333';
 
 function request(path, method, body) {
   return new Promise((resolve, reject) => {

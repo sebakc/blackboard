@@ -61,6 +61,21 @@ class ProjectManager {
   getProjectById(id) {
     return this.projectIds.get(id);
   }
+
+  getAllProjects() {
+    return Array.from(this.projects.values());
+  }
+
+  deleteProject(id) {
+    const project = this.projectIds.get(id);
+    if (!project) return false;
+
+    this.projects.delete(project.name);
+    this.projectIds.delete(id);
+    this.saveProjects();
+    this.logger.info({ id, name: project.name }, 'Project deleted');
+    return true;
+  }
 }
 
 module.exports = ProjectManager;

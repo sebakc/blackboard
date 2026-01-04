@@ -5,7 +5,7 @@ function getToken(username, name) {
   return new Promise((resolve, reject) => {
     const req = http.request({
       hostname: 'localhost',
-      port: 3000,
+      port: 3333,
       path: '/login',
       method: 'POST',
       headers: { 'Content-Type': 'application/json' }
@@ -27,7 +27,7 @@ function getToken(username, name) {
 
 async function startClient(id, name) {
   const token = await getToken(id, name);
-  const ws = new WebSocket(`ws://localhost:3000/ws?token=${token}`);
+  const ws = new WebSocket(`ws://localhost:3333/ws?token=${token}`);
 
   return new Promise((resolve) => {
     ws.on('open', () => {

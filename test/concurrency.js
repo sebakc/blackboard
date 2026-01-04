@@ -4,7 +4,7 @@ function updateData(id, version, content) {
   return new Promise((resolve, reject) => {
     const req = http.request({
       hostname: 'localhost',
-      port: 3000,
+      port: 3333,
       path: `/project-data/${id}`,
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' }
@@ -27,7 +27,7 @@ function updateData(id, version, content) {
 
 function getData(id) {
   return new Promise((resolve) => {
-    http.get(`http://localhost:3000/project-data/${id}`, (res) => {
+    http.get(`http://localhost:3333/project-data/${id}`, (res) => {
       let data = '';
       res.on('data', chunk => data += chunk);
       res.on('end', () => resolve(JSON.parse(data)));

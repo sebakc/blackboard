@@ -91,7 +91,7 @@ fastify.post('/projects', async (req, reply) => {
     return {
       projectId: project.id,
       channelId: project.channelId,
-      channelEndpoint: `ws://${req.hostname}:3000/ws`
+      channelEndpoint: `ws://${req.hostname}:3333/ws`
     };
   } catch (err) {
     if (err.message === 'Project name already exists') {
@@ -100,6 +100,32 @@ fastify.post('/projects', async (req, reply) => {
     req.log.error(err);
     return reply.code(500).send({ error: 'Internal Server Error' });
   }
+});
+
+// List all projects
+fastify.get('/projects', async (req, reply) => {
+  if (!fastify.projects) return [];
+  return fastify.projects.getAllProjects().map(p => ({
+    id: p.id,
+    name: p.name,
+    channelId: p.channelId
+  }));
+});
+
+// Get specific project
+fastify.get('/projects/:id', async (req, reply) => {
+  if (!fastify.projects) return reply.code(503).send({ error: 'Service unavailable' });
+  const project = fastify.projects.getProjectById(req.params.id);
+  if (!project) return reply.code(404).send({ error: 'Project not found' });
+  return project;
+});
+
+// Delete project
+fastify.delete('/projects/:id', async (req, reply) => {
+  if (!fastify.projects) return reply.code(503).send({ error: 'Service unavailable' });
+  const success = fastify.projects.deleteProject(req.params.id);
+  if (!success) return reply.code(404).send({ error: 'Project not found' });
+  return { message: 'Project deleted successfully' };
 });
 
 // Login route to get a token (for testing purposes)
@@ -125,7 +151,7 @@ fastify.post('/register', async (req, reply) => {
 
 const start = async () => {
   try {
-    await fastify.listen({ port: 3000, host: '0.0.0.0' });
+    await fastify.listen({ port: 3333, host: '0.0.0.0' });
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
